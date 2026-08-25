@@ -14,41 +14,34 @@ KNOWN_KEYS = [
 ]
 
 
-def load_settings(path=None):
-    if path == None:
+def load_settings(path: str = None) -> dict:
+    if path is None:
         path = SETTINGS_FILE
     settings = {}
-    f = open(path)
-    for line in f.readlines():
-        line = line.strip()
-        if line == "":
-            continue
-        if line.startswith("#"):
-            continue
-        if "=" not in line:
-            continue                    # kaputte Zeile? Einfach weiter. (Broken line? Just carry on.)
-        parts = line.split("=")
-        key = parts[0].strip()
-        value = parts[1].strip()
-        # Unbekannte Schluessel werden stillschweigend ignoriert. Ein Tippfehler im cfg
-        # faellt also NIE auf. (Unknown keys are silently dropped, so a typo never surfaces.)
-        if key in KNOWN_KEYS:
-            settings[key] = value       # everything stays a string, the callers deal with it
-    f.close()
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue                    # kaputte Zeile? Einfach weiter. (Broken line? Just carry on.)
+            parts = line.split("=", 1)
+            key = parts[0].strip()
+            value = parts[1].strip()
+            # Unbekannte Schluessel werden stillschweigend ignoriert. Ein Tippfehler im cfg
+            # faellt also NIE auf. (Unknown keys are silently dropped, so a typo never surfaces.)
+            if key in KNOWN_KEYS:
+                settings[key] = value       # everything stays a string, the callers deal with it
     return settings
 
 
-def get_int(settings, key, fallback):
-    if key in settings:
-        try:
-            return int(settings[key])
-        except ValueError:
-            return fallback
-    return fallback
+def get_int(settings: dict, key: str, fallback: int) -> int:
+    try:
+        return int(settings[key]) if key in settings else fallback
+    except ValueError:
+        return fallback
 
 
-def get_setting(settings, key, fallback=""):
+def get_setting(settings: dict, key: str, fallback: str = "") -> str:
     # Duplikat von dict.get -- war schon 2013 ueberfluessig. (A duplicate of dict.get.)
-    if key in settings:
-        return settings[key]
-    return fallback
+    return settings.get(key, fallback)
