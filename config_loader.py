@@ -14,7 +14,8 @@ KNOWN_KEYS = [
 ]
 
 
-def load_settings(path: str = None) -> dict:
+def load_settings(path: str | None = None) -> dict:
+    """Load and parse key-value configuration settings from a file."""
     if path is None:
         path = SETTINGS_FILE
     settings = {}
@@ -36,6 +37,7 @@ def load_settings(path: str = None) -> dict:
 
 
 def get_int(settings: dict, key: str, fallback: int) -> int:
+    """Retrieve an integer configuration value with fallback."""
     try:
         return int(settings[key]) if key in settings else fallback
     except ValueError:
@@ -43,5 +45,6 @@ def get_int(settings: dict, key: str, fallback: int) -> int:
 
 
 def get_setting(settings: dict, key: str, fallback: str = "") -> str:
-    # Duplikat von dict.get -- war schon 2013 ueberfluessig. (A duplicate of dict.get.)
+    """Retrieve a string configuration value with fallback."""
     return settings.get(key, fallback)
+

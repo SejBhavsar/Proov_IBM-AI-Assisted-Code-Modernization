@@ -8,13 +8,13 @@ SAMPLE = [
 
 
 def test_summary_counts_due_cars():
-    # Only VOS-4471 is nearly worn, so exactly one car is due.
+    """Verify that fleet_summary correctly counts vehicles due for service."""
     assert fleet_summary(SAMPLE)["due"] == 1
 
 
 def test_missing_reading_does_not_crash_summary():
-    # A car with no last_service_km reading must not crash the report
+    """Verify that a car with no last_service_km reading does not crash fleet_summary."""
     sample_with_missing = [{"id": "VOS-7788", "odometer": 92000}]
-    # Calling fleet_summary should not raise an exception
     summary = fleet_summary(sample_with_missing)
     assert summary["count"] == 1
+

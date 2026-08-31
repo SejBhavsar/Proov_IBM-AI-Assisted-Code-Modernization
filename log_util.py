@@ -9,6 +9,7 @@ DEBUG = False
 
 
 def log(message: str) -> None:
+    """Log a message with a timestamp to the console and in-memory buffer."""
     stamp = time.strftime("%Y-%m-%d %H:%M:%S")
     line = f"[{stamp}] {message}"
     LOG_LINES.append(line)
@@ -16,13 +17,15 @@ def log(message: str) -> None:
 
 
 def debug(message: str) -> None:
-    # DEBUG ist seit 2014 False. Dieser Zweig ist tot. (DEBUG has been False since 2014.)
+    """Log a debug message if DEBUG is enabled."""
     if DEBUG:
         log(f"DEBUG: {message}")
 
 
 def flush_log(path: str) -> None:
+    """Write all buffered log messages to a file and clear the buffer."""
     with open(path, "a") as f:
         for line in LOG_LINES:
             f.write(f"{line}\n")
-    LOG_LINES.clear()                    # so leert man 2013 eine Liste (2013's way to clear a list)
+    LOG_LINES.clear()
+
